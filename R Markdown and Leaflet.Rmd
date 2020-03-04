@@ -1,0 +1,31 @@
+---
+title: "R Markdown and Leaflet"
+author: "Qian Xu"
+date: "March 4, 2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Tracking Coronavirus Cases in the U.S.
+
+```{r, comment = ""}
+date <- Sys.Date()
+```
+Data by `r date` came from https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html
+
+```{r, message = FALSE}
+library(leaflet)
+states <- data.frame(name = c("California", "Washington", "Nebraska", "Texas", "Illinois", "Florida", "Arizona", "Massachusetts", "Oregon", "Rhode Island", "New York", "New Hampshire", "Georgia", "Wisconsin", "Utah", "North Carolina"),
+                     cases = c(40, 30, 13, 11, 4, 3, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1),
+                     lat = c(36.778259, 47.751076, 41.500000, 31.000000, 40.000000, 27.994402, 34.048927, 42.407211, 44.000000, 41.700001, 43.000000, 44.000000, 33.247875, 44.500000, 39.419220, 35.782169),
+                     lng = c(-119.417931, -120.740135, -100.000000, -100.000000, -89.000000, -81.760254, -111.093735, -71.382439, -120.500000, -71.500000, -75.000000, -71.500000, -83.441162, -89.500000, -111.950684, -80.793457))
+
+states %>%
+        leaflet() %>%
+        addTiles() %>%
+        addMarkers(lat = states$lat, lng = states$lng, popup = (paste(states$name, states$cases))) %>%
+        addCircles(weight = 1, radius = states$cases*10000)
+```
